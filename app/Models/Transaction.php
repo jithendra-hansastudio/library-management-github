@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    //
+    
+
+    public function user(){
+        return $this -> belongsTo(LibUser::class, 'user_id');
+    }
+    
+    public function book(){
+        return $this -> belongsTo(Book::class, 'book_id');
+    }
     protected $table = "transactions";
 
     public $timestamps = true;

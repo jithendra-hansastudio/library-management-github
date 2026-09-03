@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    //
     
-
-    // public $incrementing = true;    
-    // protected $keyType = 'int';
+    public function author(){
+        return $this -> hasOne(Author::class, 'author_id');
+    }
     protected $table = "books";
     protected $fillable = [
         "book_name",

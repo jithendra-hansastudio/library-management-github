@@ -10,10 +10,10 @@ class ExtraCopy extends Model
     //
     protected $table = "extracopies";
 
-    // protected $primary_key = "id";
-    // public $incrementing = true;
-    // protected $keyType = 'string';      
-    
+
+    public function book(){
+        return $this -> belongsTo(Book::class, 'book_id');
+    }
     public $timestamps = true;
     protected $fillable = [
         "book_id",        

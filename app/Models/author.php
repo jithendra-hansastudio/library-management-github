@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Author extends Model
 {
-    protected $table = "authors";
+    
 
-    // protected $primarykey = "author_ID";   
-    // public $incrementing = false;   
-    // protected $keyType = 'string';
+public function books()
+{
+
+    return $this->hasMany(Book::class, 'author_id');
+}
+
+    protected $table = "authors";
     protected $fillable = ["author_name"];
     public $timestamps = true;
+    
     use HasFactory;
 }

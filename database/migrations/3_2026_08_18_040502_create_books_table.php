@@ -15,9 +15,6 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('book_name',30)->default('anonymos');
-            // $table->foreign('author_ID')->references('id')->on('authors')->onDelete('cascade');
-            // $table->foreignId("author_id")->constrained();
-            // Creates the foreign key matching your fillable array 'author_ID'
             $table->foreignId('author_id')->constrained('authors')->onDelete('cascade'); 
             $table->enum('book_condition',['good','mint','old', 'torn']);
             $table->integer('year_of_publishing');

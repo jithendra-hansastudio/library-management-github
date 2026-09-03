@@ -14,6 +14,6 @@ class ExtraCopiesSeeders extends Seeder
     public function run(): void
     {
         //
-        extracopies::factory()->count(10)->create();
+        ExtraCopy::factory()->count(10)->create();
     }
 }

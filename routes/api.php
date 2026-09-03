@@ -1,6 +1,9 @@
 <?php
 
 
+use App\Models\LibUser;
+use App\Models\Author;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +36,12 @@ Route::post('/donations', [DonorsController::class, 'store']);
 //6
 Route::get('/extras', [ExtracopiesController::class, 'index']);
 Route::post('/extras', [ExtracopiesController::class, 'store']);
+
+Route::get('/test', function () {
+    $book = Author::with('books')->first();
+    dd($book->toArray()); // Dumps data and stops execution
+});
+
+Route::get('/authors-with-books', function () {
+    return Author::with('books')->get(['id', 'author_name']);
+});

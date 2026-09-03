@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Donor;
+use App\Models\Donation;
 use Illuminate\Http\Request;
 
 class DonorsController extends Controller
@@ -11,7 +11,7 @@ class DonorsController extends Controller
 
 
     public function index(){
-        return json_decode(Donor::all());
+        return json_decode(Donation::all());
     }
     public function store(Request $request){
         
@@ -25,7 +25,7 @@ class DonorsController extends Controller
 
     
         // Strips null fields so the database 'anonymos' default takes effect
-        $donations = Donor::create(array_filter($validated));
+        $donations = Donation::create(array_filter($validated));
          
 
          return response()->json([

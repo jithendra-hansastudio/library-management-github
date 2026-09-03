@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Donor;
+use App\Models\Donation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +14,6 @@ class DonorsSeeders extends Seeder
     public function run(): void
     {
         //
-        Donor::factory()->count(10)->create();
+        Donation::factory()->count(10)->create();
     }
 }

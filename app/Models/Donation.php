@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Donor extends Model
+class Donation extends Model
 {
-    //
-    
-    // public $incrementing = true;    
-    // protected $keyType = 'int';
+
+    public function user(){
+        return $this -> belongsTo(User::class, 'user_id');
+    }
     protected $table = "donors";
     protected $fillable = [
         'user_id',
