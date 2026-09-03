@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\libusers;
+use App\Models\LibUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<libusers>
+ * @extends Factory<LibUser>
  */
 class LibUsersFactory extends Factory
 {

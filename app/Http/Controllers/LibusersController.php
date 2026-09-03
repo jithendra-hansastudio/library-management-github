@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\libusers;
+use App\Models\LibUser;
 
 use Illuminate\Http\Request;
 

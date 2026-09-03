@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Donors;
-use App\Models\libusers;
+use App\Models\Donor;
+use App\Models\LibUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Donors>
+ * @extends Factory<Donor>
  */
 class DonorsFactory extends Factory
 {
@@ -21,7 +21,7 @@ class DonorsFactory extends Factory
         return [
             //
         
-        'user_id'           => LibUsers::inRandomOrder()->first()?->id ?? libusers::factory(),
+        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? libusers::factory(),
         'book_type'=> $this->faker->randomElement(['new','already_exists','mixed']),
         'book_condition'=> $this->faker->randomElement(['good','mint','old', 'torn','mixed']),
         'quantity_of_donations' => $this->faker->numberBetween(1,15)

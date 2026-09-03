@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class extracopies extends Model
+class ExtraCopy extends Model
 {
     //
     protected $table = "extracopies";

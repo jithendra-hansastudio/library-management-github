@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\books;
+use App\Models\Book;
 
 class BooksSeeders extends Seeder
 {
@@ -14,6 +14,6 @@ class BooksSeeders extends Seeder
     public function run(): void
     {
         //
-        books::factory()->count(10)->create();
+        Book::factory()->count(10)->create();
     }
 }

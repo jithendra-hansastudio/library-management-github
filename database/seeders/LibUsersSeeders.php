@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\libusers;
+use App\Models\LibUser;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

@@ -20,16 +20,16 @@ Route::get('/users', [LibusersController::class, 'index']);
 Route::post('/users', [LibusersController::class, 'store']);
 //2
 Route::get('/authors', [AuthorController::class, 'index']);
-Route::post('/putAuthors', [AuthorController::class, 'store']);
+Route::post('/authors', [AuthorController::class, 'store']);
 //3
-Route::get('/getBooks', [BooksController::class, 'index']);
-Route::post('/addBooks', [BooksController::class, 'store']);
+Route::get('/books', [BooksController::class, 'index']);
+Route::post('/books', [BooksController::class, 'store']);
 //4
-Route::get('/seeRents', [TransactionsController::class, 'index']);
-Route::post('/addRents', [TransactionsController::class, 'store']);
+Route::get('/rents', [TransactionsController::class, 'index']);
+Route::post('/rents', [TransactionsController::class, 'store']);
 //5
-Route::get('/seeDonations', [DonorsController::class, 'index']);
-Route::post('/addDonations', [DonorsController::class, 'store']);
+Route::get('/donations', [DonorsController::class, 'index']);
+Route::post('/donations', [DonorsController::class, 'store']);
 //6
-Route::get('/seeExtraCopies', [ExtracopiesController::class, 'index']);
-Route::post('/addExtraCopies', [ExtracopiesController::class, 'store']);
+Route::get('/extras', [ExtracopiesController::class, 'index']);
+Route::post('/extras', [ExtracopiesController::class, 'store']);

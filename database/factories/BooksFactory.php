@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Books;
-use App\Models\author;
+use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Books>
+ * @extends Factory<Book>
  */
 class BooksFactory extends Factory
 {

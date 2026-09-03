@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\author;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -9,7 +9,7 @@ class AuthorController extends Controller
     //
 
     public function index(){
-        return response()->json(author::all());
+        return response()->json(Author::all());
         
     }
 
@@ -20,7 +20,7 @@ class AuthorController extends Controller
         ]);
 
           // 2. Mass assign validated data to create product
-        $author = author::create($validated);
+        $author = Author::create($validated);
 
         // 3. Return the created product with a 201 Created status code
         return response()->json($author, 201);

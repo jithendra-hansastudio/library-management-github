@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\extracopies;
+use App\Models\ExtraCopy;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

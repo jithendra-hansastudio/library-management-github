@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class libusers extends Model
+class LibUser extends Model
 {
     //
     protected $table = "lib_users";

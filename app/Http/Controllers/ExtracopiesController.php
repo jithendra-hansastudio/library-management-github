@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\extracopies;
+use App\Models\ExtraCopy;
 use Illuminate\Http\Request;
 
 class ExtracopiesController extends Controller

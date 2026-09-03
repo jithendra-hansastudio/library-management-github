@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\books;
-use App\Models\extracopies;
+use App\Models\Book;
+use App\Models\ExtraCopy;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<extracopies>
+ * @extends Factory<ExtraCopy>
  */
 class ExtraCopiesFactory extends Factory
 {
@@ -21,7 +21,7 @@ class ExtraCopiesFactory extends Factory
         return [
             //
         
-        'book_id'           => books::inRandomOrder()->first()?->id ?? books::factory(),    
+        'book_id'           => Book::inRandomOrder()->first()?->id ?? Book::factory(),    
         "count_of_books"    => $this->faker->randomNumber("3","50"),
         ];
     }

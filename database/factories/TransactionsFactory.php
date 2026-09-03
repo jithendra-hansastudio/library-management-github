@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\transactions;
-use App\Models\libusers;
-use App\Models\books;
+use App\Models\Transaction;
+use App\Models\LibUser;
+use App\Models\Book;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<transactions>
+ * @extends Factory<Transaction>
  */
 class TransactionsFactory extends Factory
 {
@@ -23,8 +23,8 @@ class TransactionsFactory extends Factory
         return [
             //
         
-        'user_id'           => LibUsers::inRandomOrder()->first()?->id ?? libusers::factory(),
-        "book_id"           => books::inRandomOrder()->first()?->id ?? books::factory(),
+        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? libusers::factory(),
+        "book_id"           => Book::inRandomOrder()->first()?->id ?? Book::factory(),
         "issue_date"        => $this->faker->date(),       
         "date_of_return"    => $this->faker->date(),   
         

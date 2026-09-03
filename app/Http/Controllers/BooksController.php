@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\books;
+use App\Models\Book;
 use Illuminate\Http\Request;
 
 class BooksController extends Controller
@@ -10,7 +10,7 @@ class BooksController extends Controller
     public function index(){
         // $books = books::all();
         // return json_encode($books);
-        return response()->json(books::all());
+        return response()->json(Book::all());
     }
     public function store(Request $request){
 
@@ -23,7 +23,7 @@ class BooksController extends Controller
 
     
         // Strips null fields so the database 'anonymos' default takes effect
-        Books::create(array_filter($validated));
+        Book::create(array_filter($validated));
 
         // return redirect()->back()->with('success', 'Book added successfully!');
          return response()->json([
