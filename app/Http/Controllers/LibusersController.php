@@ -10,7 +10,7 @@ class LibusersController extends Controller
 {
     //
     public function index(){
-        return response()->json(libusers::all());
+        return response()->json(LibUser::all());
     
     }
     /**
@@ -31,7 +31,7 @@ class LibusersController extends Controller
 
     
     
-    $user = libusers::create($validated);
+    $user = LibUser::create($validated);
     return response()->json([
         'message' => 'User created successfully!',
         'data' => $user

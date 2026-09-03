@@ -23,7 +23,7 @@ class TransactionsFactory extends Factory
         return [
             //
         
-        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? libusers::factory(),
+        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? LibUser::factory(),
         "book_id"           => Book::inRandomOrder()->first()?->id ?? Book::factory(),
         "issue_date"        => $this->faker->date(),       
         "date_of_return"    => $this->faker->date(),   

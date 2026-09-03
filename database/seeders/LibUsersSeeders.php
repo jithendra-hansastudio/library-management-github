@@ -14,6 +14,6 @@ class LibUsersSeeders extends Seeder
     public function run(): void
     {
         //
-        libusers::factory()->count(10)->create();
+        LibUser::factory()->count(10)->create();
     }
 }
