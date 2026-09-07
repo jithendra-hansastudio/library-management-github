@@ -18,13 +18,20 @@ class TransactionsFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Transaction::class; 
+
+
+
+
     public function definition(): array
     {
         return [
             //
         
-        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? LibUser::factory(),
-        "book_id"           => Book::inRandomOrder()->first()?->id ?? Book::factory(),
+        // 'user_id'           => LibUser::inRandomOrder()->first()?->id ?? LibUsersFactory::new(),
+        // "book_id"           => Book::inRandomOrder()->first()?->id ?? BooksFactory::factory(),/
+         'user_id'           => LibUsersFactory::new(),
+         "book_id"           => BooksFactory::new(),
         "issue_date"        => $this->faker->date(),       
         "date_of_return"    => $this->faker->date(),   
         

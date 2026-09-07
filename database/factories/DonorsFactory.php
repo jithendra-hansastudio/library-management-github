@@ -16,12 +16,13 @@ class DonorsFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Donation::class; // <-- Fixes "App\LibUsers not found"
     public function definition(): array
     {
         return [
             //
         
-        'user_id'           => LibUser::inRandomOrder()->first()?->id ?? LibUser::factory(),
+        'user_id'           => LibUsersFactory::new(),
         'book_type'=> $this->faker->randomElement(['new','already_exists','mixed']),
         'book_condition'=> $this->faker->randomElement(['good','mint','old', 'torn','mixed']),
         'quantity_of_donations' => $this->faker->numberBetween(1,15)

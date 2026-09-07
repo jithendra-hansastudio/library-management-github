@@ -9,7 +9,7 @@ class Donation extends Model
 {
 
     public function user(){
-        return $this -> belongsTo(User::class, 'user_id');
+        return $this -> belongsTo(LibUser::class, 'user_id');
     }
     protected $table = "donors";
     protected $fillable = [

@@ -16,6 +16,7 @@ class ExtraCopiesFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = ExtraCopy::class;
     public function definition(): array
     {
         return [

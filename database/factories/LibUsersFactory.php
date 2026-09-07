@@ -15,6 +15,7 @@ class LibUsersFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = LibUser::class; 
     public function definition(): array
     {
         return [

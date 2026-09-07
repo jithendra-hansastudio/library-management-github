@@ -9,7 +9,17 @@ class Book extends Model
 {
     
     public function author(){
-        return $this -> hasOne(Author::class, 'author_id');
+        return $this -> belongsTo(Author::class, 'id');
+    }
+    
+    public function extraCopy()
+    {
+        return $this->hasOne(ExtraCopy::class, 'book_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'book_id');
     }
     protected $table = "books";
     protected $fillable = [

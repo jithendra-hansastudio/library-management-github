@@ -15,6 +15,7 @@ class AuthorFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Author::class; // <-- Fixes "App\LibUsers not found"
     public function definition(): array
     {
         return [

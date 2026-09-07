@@ -16,6 +16,7 @@ class BooksFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Book::class; // <-- Fixes "App\Books not found"
     public function definition(): array
     {
         return [
