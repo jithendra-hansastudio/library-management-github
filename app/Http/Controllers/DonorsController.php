@@ -7,12 +7,21 @@ use Illuminate\Http\Request;
 
 class DonorsController extends Controller
 {
-    //
-
-
+    /**
+     * Display a listing of all donations.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(){
         return json_decode(Donation::all());
     }
+
+    /**
+     * Validate and record a new donation entry.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request){
         
         $validated = $request->validate([
@@ -34,5 +43,5 @@ class DonorsController extends Controller
     ], 201);
 
         // return redirect()->back()->with('success', 'Book added successfully!');
-}
+    }
 }

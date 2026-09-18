@@ -8,12 +8,22 @@ use Illuminate\Http\Request;
 
 class LibusersController extends Controller
 {
-    //
+    /**
+     * Return a JSON response listing all library users for API consumption.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function api_index(){
         return response()->json(LibUser::all());
     
     }
-     public function index()
+
+    /**
+     * Display a listing of library users ordered by name with transaction and donation counts.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index()
     {
         $users = LibUser::withCount(['transactions', 'donations'])
                      ->orderBy('user_name')
@@ -22,8 +32,12 @@ class LibusersController extends Controller
         return view('lib_users.index', compact('users'));
     }
 
-
-    // Show single user with all transactions (and their books) + donations
+    /**
+     * Display a single library user profile with nested transactions (including books) and donations.
+     *
+     * @param int|string $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function show($id)
     {
         $user = LibUser::with([
@@ -35,7 +49,8 @@ class LibusersController extends Controller
     }
 
     /**
-     * Summary of store
+     * Validate and store a new library user in the database.
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */

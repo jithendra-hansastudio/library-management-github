@@ -8,7 +8,11 @@ use Carbon\Carbon;
 
 class TransactionsController extends Controller
 {
-    //
+    /**
+     * Fetch all transactions via API and dynamically calculate overdue fines on-the-fly.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function api_index(){
 
     //FULL GEMINI
@@ -43,7 +47,13 @@ class TransactionsController extends Controller
         'data' => $calculatedTransactions
     ], 200);
     }
-public function index()
+
+    /**
+     * Display a web listing of transactions ordered by latest issue date with user and book details.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index()
     {
         $transactions = Transaction::with(['user', 'book'])
             ->latest('issue_date')
@@ -52,7 +62,12 @@ public function index()
         return view('transactions.index', compact('transactions'));
     }
 
-    // Display details of a specific transaction
+    /**
+     * Display details of a specific transaction by ID.
+     *
+     * @param int|string $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function show($id)
     {
         $transaction = Transaction::with(['user', 'book'])->findOrFail($id);
@@ -61,6 +76,12 @@ public function index()
     }
             
 
+    /**
+     * Validate request data and record a new book borrow/checkout transaction.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request){
     
     $validated = request()->validate([
@@ -93,7 +114,12 @@ public function index()
 
    }
 
-   
+    /**
+     * Update an existing transaction record when a book is returned and fine paid.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function edit(Request $request){
     
     //THE TRANSASCTION ID is the key, 

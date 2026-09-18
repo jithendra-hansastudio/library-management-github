@@ -7,15 +7,32 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
+    /**
+     * Display a listing of books along with their author details.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index(){
         
-    $books = Book::with('author')->get();
-    return view('books.index', compact('books')); 
-}
-public function api_index(){       
-            return response()->json(Book::with('author')->get());
+        $books = Book::with('author')->get();
+        return view('books.index', compact('books')); 
     }
 
+    /**
+     * Return a JSON response listing all books with author details.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function api_index(){       
+        return response()->json(Book::with('author')->get());
+    }
+
+    /**
+     * Validate and store a new book record in the database.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request){
 
         $validated = $request->validate([
@@ -34,16 +51,21 @@ public function api_index(){
         'message' => 'Book Added successfully!',
         'data' => $validated
     ], 201);
-}
-
-public function show($id)
-    {
-    // $books = Book::findOrFail($id)::with('author')->get();
-    $book = Book::with('author')->findOrFail($id);
-    return view('books.show', compact('book')); 
-}
-
     }
+
+    /**
+     * Display details of a specific book by ID.
+     *
+     * @param int|string $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show($id)
+    {
+        // $books = Book::findOrFail($id)::with('author')->get();
+        $book = Book::with('author')->findOrFail($id);
+        return view('books.show', compact('book')); 
+    }
+}
     
 
     
