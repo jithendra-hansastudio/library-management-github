@@ -8,10 +8,14 @@ use Illuminate\Http\Request;
 class BooksController extends Controller
 {
     public function index(){
-        // $books = books::all();
-        // return json_encode($books);
-        return response()->json(Book::all());
+        
+    $books = Book::with('author')->get();
+    return view('books.index', compact('books')); 
+}
+public function api_index(){       
+            return response()->json(Book::with('author')->get());
     }
+
     public function store(Request $request){
 
         $validated = $request->validate([
@@ -32,7 +36,16 @@ class BooksController extends Controller
     ], 201);
 }
 
+public function show($id)
+    {
+    // $books = Book::findOrFail($id)::with('author')->get();
+    $book = Book::with('author')->findOrFail($id);
+    return view('books.show', compact('book')); 
+}
+
     }
-    //
+    
+
+    
 
 

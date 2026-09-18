@@ -19,17 +19,17 @@ use App\Http\Controllers\LibusersController;
 use App\Http\Controllers\ExtracopiesController;
 use App\Http\Controllers\DonorsController;
 //1
-Route::get('/users', [LibusersController::class, 'index']);
+Route::get('/users', [LibusersController::class, 'api_index']);
 Route::post('/users', [LibusersController::class, 'store']);
 //2
-Route::get('/authors', [AuthorController::class, 'index']);
+Route::get('/authors', [AuthorController::class, 'api_index']);
 Route::post('/authors', [AuthorController::class, 'store']);
 //3
-Route::get('/books', [BooksController::class, 'index']);
+Route::get('/books', [BooksController::class, 'api_index']);
 Route::post('/books', [BooksController::class, 'store']);
 //4
-Route::get('/rents', [TransactionsController::class, 'index']);
-Route::post('/rents', [TransactionsController::class, 'store']);
+Route::get('/transactions', [TransactionsController::class, 'api_index']);
+Route::post('/transactions', [TransactionsController::class, 'store']);
 //5
 Route::get('/donations', [DonorsController::class, 'index']);
 Route::post('/donations', [DonorsController::class, 'store']);

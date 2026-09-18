@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class TransactionsController extends Controller
 {
     //
-    public function index(){
+    public function api_index(){
 
     //FULL GEMINI
     $daily_fine_amt = 10;
@@ -43,7 +43,22 @@ class TransactionsController extends Controller
         'data' => $calculatedTransactions
     ], 200);
     }
+public function index()
+    {
+        $transactions = Transaction::with(['user', 'book'])
+            ->latest('issue_date')
+            ->get();
 
+        return view('transactions.index', compact('transactions'));
+    }
+
+    // Display details of a specific transaction
+    public function show($id)
+    {
+        $transaction = Transaction::with(['user', 'book'])->findOrFail($id);
+
+        return view('transactions.show', compact('transaction'));
+    }
             
 
     public function store(Request $request){
@@ -60,7 +75,7 @@ class TransactionsController extends Controller
     echo $validated["book_id"];
 
 
-   $finalData = transactions::create([    
+   $finalData = Transaction::create([    
      "user_id"         => $validated["user_id"],
      "book_id"         => $validated["book_id"],
      "status"          => 'borrowed',

@@ -9,10 +9,31 @@ use Illuminate\Http\Request;
 class LibusersController extends Controller
 {
     //
-    public function index(){
+    public function api_index(){
         return response()->json(LibUser::all());
     
     }
+     public function index()
+    {
+        $users = LibUser::withCount(['transactions', 'donations'])
+                     ->orderBy('user_name')
+                     ->get();
+
+        return view('lib_users.index', compact('users'));
+    }
+
+
+    // Show single user with all transactions (and their books) + donations
+    public function show($id)
+    {
+        $user = LibUser::with([
+            'transactions.book', // Eager-load nested book for transaction display
+            'donations'
+        ])->findOrFail($id);
+
+        return view('lib_users.show', compact('user'));
+    }
+
     /**
      * Summary of store
      * @param Request $request

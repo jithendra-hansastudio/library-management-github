@@ -8,10 +8,22 @@ class AuthorController extends Controller
 {
     //
 
-    public function index(){
-        return response()->json(Author::all());
-        
+    public function index()
+    {
+        $authors = Author::withCount('books')->orderBy('author_name')->get();
+        return view('authors.index', compact('authors'));
     }
+    public function api_index(){
+        return response()->json(Author::all());
+    }
+
+    // Display a single author and all their books
+    public function show($id)
+    {
+        $author = Author::with('books')->findOrFail($id);
+        return view('authors.show', compact('author'));
+    }
+
 
     public function store(Request $request){
         
