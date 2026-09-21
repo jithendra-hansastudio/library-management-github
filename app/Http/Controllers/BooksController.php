@@ -13,9 +13,10 @@ class BooksController extends Controller
      * @return \Illuminate\Contracts\View\View
      */
     public function index(){
-        
+        // 1. Overall System Summary Stats
+        $totalTitles = Book::count();
         $books = Book::with('author')->get();
-        return view('books.index', compact('books')); 
+        return view('books.index', compact('books','totalTitles')); 
     }
 
     /**
@@ -60,9 +61,8 @@ class BooksController extends Controller
      * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
-    {
-        // $books = Book::findOrFail($id)::with('author')->get();
-        $book = Book::with('author')->findOrFail($id);
+    {        
+        $book = Book::with('author' ,'extraCopy','transactions')->findOrFail($id);
         return view('books.show', compact('book')); 
     }
 }

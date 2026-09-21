@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Books</h1>
+    <p>Total number of books: {{ $totalTitles }}</p>
 
     @if($books->isEmpty())
         <p>No books found.</p>

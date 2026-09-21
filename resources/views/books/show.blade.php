@@ -40,6 +40,46 @@
                 <strong>Last Updated:</strong> 
                 {{ $book->updated_at->diffForHumans() }}
             </li>
+
+            <br>
+               <li>        
+                @if($book->extraCopy)     
+                <strong>Total Available Copies:</strong> 
+                {{($book->extraCopy->count_of_books) + 1}}
+                
+                @else
+                <strong>Total Available Copies:</strong> 
+                {{ 1 }}
+                
+                @endif
+                
+          </li>
+            <br>
+
+            @php
+                $activeBorrowings = $book->transactions->where('status', 'borrowed');
+            @endphp
+
+            
+               @if($activeBorrowings->isNotEmpty())
+        <h4>Currently Borrowed:</h4>
+        
+            @foreach($activeBorrowings as $transaction)
+                
+                    Book borrowed with
+                    <a href="{{ route('transactions.show', $transaction->id) }}">
+                        Transaction #{{ $transaction->id }}
+                    </a>
+                    (Due on: {{ $transaction->date_of_return }})
+                
+            @endforeach
+        
+    @else
+        <p>This book is currently not borrowed by anyone.</p>
+    @endif
+             
+                
+            <br>
         </ul>
 
     </main>

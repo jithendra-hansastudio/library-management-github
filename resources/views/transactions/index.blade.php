@@ -13,13 +13,17 @@
     @else
         <ul>
             @foreach ($transactions as $transaction)
+             Book Num: <strong>{{ $transaction->book->id ?? 'Unknown Number' }}</strong> | 
                 <li>
                     <a href="{{ route('transactions.show', $transaction->id) }}">
                         <strong>Transaction #{{ $transaction->id }}</strong>
                     </a>
                     — 
+                                        
                     User: <strong>{{ $transaction->user->user_name ?? 'Unknown User' }}</strong> | 
+
                     Book: <strong>{{ $transaction->book->book_name ?? 'Unknown Book' }}</strong> | 
+                   
                     Status: {{ ucfirst($transaction->status) }}
                 </li>
             @endforeach
