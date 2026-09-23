@@ -1,4 +1,9 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+
 import { createInertiaApp } from '@inertiajs/vue3';
+// ... rest of your existing imports
+
 import { initializeTheme } from '@/composables/useAppearance';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';

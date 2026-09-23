@@ -2,71 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $user->user_name }} - Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $user->user_name }} - User Profile</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.ts'])
 </head>
-<body>
+<body class="bg-light">
+    @include('partials.navbar')
 
-    <a href="{{ route('lib_users.index') }}">&larr; Back to Users List</a>
+    <main class="container my-5">
+        <!-- Back Navigation Button -->
+        <a href="{{ route('lib_users.index') }}" class="btn btn-outline-secondary mb-4">&larr; Back to Users List</a>
 
-    <h1>User Profile: {{ $user->user_name }}</h1>
+        <!-- Profile Header Card -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0 text-primary">{{ $user->user_name }}</h1>
+                @php
+                    $roleBadges = [
+                        'admin' => 'bg-danger',
+                        'librarian' => 'bg-warning text-dark',
+                        'member' => 'bg-info text-dark',
+                        'visitor' => 'bg-secondary'
+                    ];
+                    $badgeClass = $roleBadges[strtolower($user->role)] ?? 'bg-primary';
+                @endphp
+                <span class="badge {{ $badgeClass }} fs-6">{{ ucfirst($user->role) }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Gender</span>
+                                <span>{{ strtoupper($user->gender) }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Date of Birth</span>
+                                <span>{{ $user->date_of_birth }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Address</span>
+                                <span>{{ $user->address }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Member Since</span>
+                                <span class="text-muted">{{ $user->created_at->format('M d, Y') }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- User Details -->
-    <ul>
-        <li><strong>Role:</strong> {{ ucfirst($user->role) }}</li>
-        <li><strong>Gender:</strong> {{ strtoupper($user->gender) }}</li>
-        <li><strong>Date of Birth:</strong> {{ $user->date_of_birth }}</li>
-        <li><strong>Address:</strong> {{ $user->address }}</li>
-        <li><strong>Member Since:</strong> {{ $user->created_at->format('M d, Y') }}</li>
-    </ul>
+        <!-- Borrowing History (Transactions) -->
+        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+            <h2 class="h4 mb-0">Borrowing History</h2>
+        </div>
 
-    <hr>
+        @if($user->transactions->isEmpty())
+            <div class="alert alert-info shadow-sm" role="alert">
+                No transaction history found for this user.
+            </div>
+        @else
+            <div class="table-responsive shadow-sm bg-white rounded border mb-4">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-3">Book</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Issue Date</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Returned On</th>
+                            <th scope="col" class="text-end pe-3">Fine Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($user->transactions as $transaction)
+                            <tr>
+                                <td class="ps-3 fw-bold">
+                                    <a href="{{ route('books.show', $transaction->book->id ?? '#') }}" class="text-decoration-none text-dark">
+                                        {{ $transaction->book->book_name ?? 'Unknown Book' }}
+                                    </a>
+                                </td>
+                                <td>
+                                    @if(strtolower($transaction->status) === 'borrowed')
+                                        <span class="badge bg-warning text-dark">Borrowed</span>
+                                    @else
+                                        <span class="badge bg-success">Returned</span>
+                                    @endif
+                                </td>
+                                <td>{{ $transaction->issue_date }}</td>
+                                <td>{{ $transaction->due_date ?? $transaction->date_of_return }}</td>
+                                <td>
+                                    {{ $transaction->returned_on ?? '—' }}
+                                </td>
+                                <td class="text-end pe-3">
+                                    @if($transaction->total_fine_paid > 0)
+                                        <span class="badge bg-danger">${{ number_format($transaction->total_fine_paid, 2) }}</span>
+                                    @else
+                                        <span class="text-muted">$0.00</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
-    <!-- Borrowing History (Transactions) -->
-    <h2>Borrowing History</h2>
-    @if($user->transactions->isEmpty())
-        <p>No transaction history found for this user.</p>
-    @else
-        <ul>
-            @foreach ($user->transactions as $transaction)
-                <li>
-                    Book: 
-                    <a href="{{ route('books.show', $transaction->book->id ?? '#') }}">
-                        <strong>{{ $transaction->book->book_name ?? 'Unknown Book' }}</strong>
-                    </a>
-                    <br>
-                    Status: {{ ucfirst($transaction->status) }} | 
-                    Issued: {{ $transaction->issue_date }} | 
-                    Due: {{ $transaction->due_date }}
-                    @if($transaction->returned_on)
-                        | Returned: {{ $transaction->returned_on }}
-                    @endif
-                    @if($transaction->total_fine_paid > 0)
-                        | Fine Paid: ${{ number_format($transaction->total_fine_paid, 2) }}
-                    @endif
-                </li>
-                <br>
-            @endforeach
-        </ul>
-    @endif
-
-    <hr>
-
-    <!-- Donations Made
-    <h2>Donations Made</h2>
-    @if($user->donations->isEmpty())
-        <p>No donations made by this user.</p>
-    @else
-        <ul>
-            @foreach ($user->donations as $donation)
-                <li>
-                    Quantity: {{ $donation->quantity_of_donations }} | 
-                    Type: {{ ucfirst($donation->book_type) }} | 
-                    Condition: {{ ucfirst($donation->book_condition) }} | 
-                    Date: {{ $donation->created_at->format('M d, Y') }}
-                </li>
-            @endforeach
-        </ul>
-    @endif -->
+    </main>
 
 </body>
 </html>

@@ -7,7 +7,7 @@ use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
 //routes i Created
-Route::view('/home', 'homescreen');
+Route::view('/home', 'homescreen')->name('homescreen');
 // Books
 Route::get('/books', [BooksController::class, 'index'])->name('books.index');
 Route::get('/books/{id}', [BooksController::class, 'show'])->name('books.show');
