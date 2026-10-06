@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             AuthorsSeeders::class,
             BooksSeeders::class,
             TransactionssSeeders::class,
-            TransactionssSeeders::class,
+            DonorsSeeders::class,
             ExtraCopiesSeeders::class,
             ]);
     }

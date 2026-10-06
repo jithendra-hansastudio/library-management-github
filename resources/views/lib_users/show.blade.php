@@ -6,10 +6,12 @@
     <title>{{ $user->user_name }} - User Profile</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.ts'])
+    @vite(['resources/css/app.css'])
 </head>
 <body class="bg-light">
+   <br>
     @include('partials.navbar')
+
 
     <main class="container my-5">
         <!-- Back Navigation Button -->

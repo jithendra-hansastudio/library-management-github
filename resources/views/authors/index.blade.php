@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authors Directory - Library Management</title>
+    <title>Library Management Dashboard</title>
     
+    <!-- 1. Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.ts'])
+    
+    <!-- 2. Bootstrap JS Bundle (Includes Popper for dropdowns & modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- 3. Your Custom CSS only -->
+    @vite(['resources/css/app.css'])
+
 </head>
 <body class="bg-light">
+   <br>
     @include('partials.navbar')
+
 
     <main class="container my-5">
         <!-- Page Header -->

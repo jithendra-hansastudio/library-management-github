@@ -61,12 +61,17 @@ class LibusersController extends Controller
             "date_of_birth"         =>"required|date",    
             "gender"                =>"required|in:male,female,prefer_not_to_say",    
             "address"               =>"required|string|max:40",    
-            "role"                  =>"required|in:librarian,admin,member,visitor"
+            "role"                  =>"required|in:librarian,admin,member,visitor",
+            "password"      => "nullable|string|min:8|max:12"
+            
+        
     ]);
 
+        // If password is not sent in request, generate a random plain-text string
+        if (empty($validated['password'])) {
+            $validated['password'] = Str::random(10);
+        }
 
-    
-    
     $user = LibUser::create($validated);
     return response()->json([
         'message' => 'User created successfully!',

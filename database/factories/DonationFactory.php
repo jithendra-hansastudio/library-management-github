@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Donation>
  */
-class DonorsFactory extends Factory
+class DonationFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -22,7 +22,7 @@ class DonorsFactory extends Factory
         return [
             //
         
-        'user_id'           => LibUsersFactory::new(),
+        'user_id'           => LibUserFactory::new(),
         'book_type'=> $this->faker->randomElement(['new','already_exists','mixed']),
         'book_condition'=> $this->faker->randomElement(['good','mint','old', 'torn','mixed']),
         'quantity_of_donations' => $this->faker->numberBetween(1,15)

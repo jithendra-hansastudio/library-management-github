@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
+// 1. Import Authenticatable instead of standard Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 /**
  * Class LibUser
  *
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Donation> $donations
  */
-class LibUser extends Model
+class LibUser extends Authenticatable
 {
     /**
      * Get all transactions made by this library user.
@@ -38,7 +38,9 @@ class LibUser extends Model
     public function donations(){
         return $this -> hasMany(Donation::class, 'user_id');
     }
-
+    
+    use HasFactory, Notifiable;
+    
     protected $table = "lib_users";
         
     public $timestamps = true;
@@ -47,8 +49,13 @@ class LibUser extends Model
         "date_of_birth",
         "gender",
         "address",
-        "role"
+        "role",
+        "password"
             ];
+            protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-            use HasFactory;
+            
 }

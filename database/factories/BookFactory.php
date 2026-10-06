@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Book>
  */
-class BooksFactory extends Factory
+class BookFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,8 +23,8 @@ class BooksFactory extends Factory
 
         //GEMINI
         // Generate realistic, capitalized 3-word book titles (e.g. "The Great Adventure")
-        'book_name' => ucwords($this->faker->words(3, true)),
-
+        'book_name' => substr(ucwords($this->faker->words(3, true)), 0, 30),
+        
         // Method 1: Automatically picks a random existing Author ID from database
         'author_id' => Author::inRandomOrder()->first()?->id ?? Author::factory(),
             

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<LibUser>
  */
-class LibUsersFactory extends Factory
+class LibUserFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,11 +19,13 @@ class LibUsersFactory extends Factory
     public function definition(): array
     {
         return [
-        "user_name"         => $this->faker->name(""),
+        
+        "user_name"     => substr($this->faker->name(), 0, 20),
         "date_of_birth"     => $this->faker->date(),
         "gender"            => $this->faker->randomElement(["male","female","prefer_not_to_say"]),
         "address"           =>substr($this->faker->address(), 0, 38),
         "role"              => $this->faker->randomElement(["librarian","admin","member","visitor"]),   
+        "password"      => $this->faker->regexify('[A-Za-z0-9]{8,12}')
             //
         ];
     }

@@ -6,7 +6,7 @@
     <title>{{ $author->author_name }} - Author Profile</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.ts'])
+    @vite(['resources/css/app.css'])
 </head>
 <body class="bg-light">
     @include('partials.navbar')
@@ -14,7 +14,7 @@
     <main class="container my-5">
         <!-- Back Navigation Button -->
         <a href="{{ route('authors.index') }}" class="btn btn-outline-secondary mb-4">&larr; Back to Authors List</a>
-
+  
         <!-- Author Header Card -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body p-4 d-flex justify-content-between align-items-center">

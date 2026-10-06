@@ -1,0 +1,16 @@
+/*OUR CSS STARTS FROM HERE*/
+body,
+body.bg-light {
+    background-color: #297dfa !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Custom Card Hover Animations */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}

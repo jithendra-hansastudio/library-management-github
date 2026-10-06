@@ -84,3 +84,36 @@ The application provides complete library operations including member management
 * Docker Setup & Cheatsheet: [`readME_guide.md`](file:///c:/Users/geniu/Herd/newphpproj/readME_guide.md)
 * Eloquent Map: [`toBeRead.md`](file:///c:/Users/geniu/Herd/newphpproj/toBeRead.md)
 * Flutter Entrypoint: [`flutter_app/lib_mgmt/lib/main.dart`](file:///c:/Users/geniu/Herd/newphpproj/flutter_app/lib_mgmt/lib/main.dart)
+
+
+6/10/26 
+Password Addition
+---
+## 7. Authentication & User Schema Updates (Development Notes)
+
+### Database & User Schema
+- **Name Field Standard**: Schema updated to use `name` (VARCHAR 50) instead of `user_name` to store full member names properly without string truncation errors during seeding.
+- **Password Field Integration**: Added a plain-text `password` string column to the `lib_users` table migration.
+- **Factory Configuration (`LibUserFactory`)**: Updated factory to generate full names via `$this->faker->name()` and static/mock passwords (`password123`) for development testing.
+- **Model Inheritance**: `LibUser` extends `Illuminate\Foundation\Auth\User` (instead of standard `Model`) to implement the `Authenticatable` interface for Laravel's `SessionGuard`. Updated `config/auth.php` to set `LibUser::class` as the default `users` provider.
+
+### Authentication Strategy & Implementation Note
+- **Plain-Text Database Comparison**: Because passwords are stored as plain text during development (omitting `Hash::make()`), standard Laravel hashed verification (`Auth::attempt()`) is bypassed.
+- **Manual Verification Logic**: `AuthController` performs direct string matching against the database before calling `Auth::login($user)`:
+  ```php
+  $user = LibUser::where('name', $request->name)
+                 ->where('password', $request->password)
+                 ->first();
+
+  if ($user) {
+      Auth::login($user);
+      $request->session()->regenerate();
+      return redirect()->intended('/home');
+  }
+Yet to be added!
+
+## 8. Cross-Platform UI/UX Strategy (PHP Blade vs. Flutter)
+
+### Design & Architecture Parity
+- **Framework Separation**: Web views utilize Laravel Blade with Bootstrap/Shadcn components, whereas the mobile application uses native Flutter widgets (`flutter_app/lib_mgmt`).
+- **Visual Parity over Code Sharing**: Rather than web wrapper solutions (WebView), UI/UX consistency across platforms is maintained by replicating design tokens (color palettes, typography hierarchy, component layouts, and user workflows) directly within Flutter's `ThemeData` and custom Dart widgets while utilizing the Laravel REST API layer (`routes/api.php`) for data exchange.

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Transaction>
  */
-class TransactionsFactory extends Factory
+class TransactionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -30,8 +30,8 @@ class TransactionsFactory extends Factory
         
         // 'user_id'           => LibUser::inRandomOrder()->first()?->id ?? LibUsersFactory::new(),
         // "book_id"           => Book::inRandomOrder()->first()?->id ?? BooksFactory::factory(),/
-         'user_id'           => LibUsersFactory::new(),
-         "book_id"           => BooksFactory::new(),
+         'user_id'           => LibUserFactory::new(),
+         "book_id"           => BookFactory::new(),
         "issue_date"        => $this->faker->date(),       
         "date_of_return"    => $this->faker->date(),   
         

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<ExtraCopy>
  */
-class ExtraCopiesFactory extends Factory
+class ExtraCopyFactory extends Factory
 {
     /**
      * Define the model's default state.

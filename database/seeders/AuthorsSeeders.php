@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Attribute;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 // use phpDocumentor\Reflection\DocBlock\Tags\Author;
