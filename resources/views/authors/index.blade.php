@@ -1,22 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Management Dashboard</title>
+    <title>Library Management Dashboard - Authors</title>
     
-    <!-- 1. Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- 2. Bootstrap JS Bundle (Includes Popper for dropdowns & modals) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">    
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-    <!-- 3. Your Custom CSS only -->
-    @vite(['resources/css/app.css'])
-
+    <!-- Dynamic System Theme Injected Here -->
+    @include('partials.theme-styles')
 </head>
-<body class="bg-light">
-   <br>
+<body>
+    <br>
     @include('partials.navbar')
-
 
     <main class="container my-5">
         <!-- Page Header -->
@@ -59,6 +56,5 @@
             </div>
         @endif
     </main>
-
 </body>
 </html>

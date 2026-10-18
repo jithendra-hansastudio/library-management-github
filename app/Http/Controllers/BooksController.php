@@ -25,7 +25,9 @@ class BooksController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function api_index(){       
+    
         return response()->json(Book::with('author')->get());
+
     }
 
     /**

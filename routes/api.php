@@ -17,6 +17,7 @@ use App\Http\Controllers\BooksController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\LibusersController;
 use App\Http\Controllers\ExtracopiesController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DonorsController;
 //1
 Route::get('/users', [LibusersController::class, 'api_index']);
@@ -36,6 +37,10 @@ Route::post('/donations', [DonorsController::class, 'store']);
 //6
 Route::get('/extras', [ExtracopiesController::class, 'index']);
 Route::post('/extras', [ExtracopiesController::class, 'store']);
+
+//7
+Route::get('/settings', [SettingsController::class, 'api_index']);
+
 
 Route::get('/test', function () {
     $book = Author::with('books')->first();

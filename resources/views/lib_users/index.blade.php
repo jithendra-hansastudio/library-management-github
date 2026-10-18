@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Users Directory - Library Management</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css'])
+    <title>Library Users - Management Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">    
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- Dynamic System Theme Injected Here -->
+    @include('partials.theme-styles')
 </head>
-<body class="bg-light">
+<body>
     <br>
     @include('partials.navbar')
 
@@ -16,8 +18,8 @@
         <!-- Page Header -->
         <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
             <div>
-                <h1 class="h2 mb-1">Library Users Directory</h1>
-                <p class="text-muted small mb-0">Manage registered members, librarians, and administrative users</p>
+                <h1 class="h2 mb-1">Library Users</h1>
+                <p class="text-muted small mb-0">Browse and manage registered users and their system roles</p>
             </div>
             <span class="badge bg-primary fs-6">Total Users: {{ $users->count() }}</span>
         </div>
@@ -27,54 +29,35 @@
                 No users found in the system database.
             </div>
         @else
-            <!-- Responsive Table View -->
-            <div class="table-responsive shadow-sm bg-white rounded border">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" class="ps-3">ID</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Transactions</th>
-                            <th scope="col" class="text-end pe-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td class="ps-3 fw-bold text-secondary">#{{ $user->id }}</td>
-                                <td>
-                                    <span class="fw-semibold text-dark">{{ $user->user_name }}</span>
-                                </td>
-                                <td>
-                                    @php
-                                        $roleBadges = [
-                                            'admin' => 'bg-danger',
-                                            'librarian' => 'bg-warning text-dark',
-                                            'member' => 'bg-info text-dark',
-                                            'visitor' => 'bg-secondary'
-                                        ];
-                                        $badgeClass = $roleBadges[strtolower($user->role)] ?? 'bg-primary';
-                                    @endphp
-                                    <span class="badge {{ $badgeClass }}">{{ ucfirst($user->role) }}</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-light text-dark border">
-                                        {{ $user->transactions_count }} {{ Str::plural('Record', $user->transactions_count) }}
+            <!-- Responsive Grid of User Cards -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach ($users as $libUser)
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0">
+                                        <a href="{{ route('lib_users.show', $libUser->id) }}" class="text-decoration-none text-dark stretched-link fw-bold">
+                                            {{ $libUser->user_name }}
+                                        </a>
+                                    </h5>
+                                    <!-- Thematic role badge using standard theme colors instead of randomized/hardcoded indicators -->
+                                    <span class="badge bg-secondary rounded-pill">
+                                        {{ ucfirst($libUser->role) }}
                                     </span>
-                                </td>
-                                <td class="text-end pe-3">
-                                    <a href="{{ route('lib_users.show', $user->id) }}" class="btn btn-sm btn-outline-primary">
-                                        View Profile &rarr;
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                </div>
+                                <p class="card-text text-muted small mb-2">
+                                    <strong>Gender:</strong> {{ strtoupper($libUser->gender) }}
+                                </p>
+                                <p class="card-text text-muted small mt-auto">
+                                    Click to view full user profile & history &rarr;
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         @endif
     </main>
-
 </body>
 </html>

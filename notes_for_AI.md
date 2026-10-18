@@ -111,9 +111,19 @@ Password Addition
       return redirect()->intended('/home');
   }
 Yet to be added!
+8. Dynamic UI Theme Engine & Customization Architecture
+Database-Driven Design Tokens: User interface preferences are persisted in the settings table (linked 1:1 with lib_users via foreign key cascading). Stored tokens include:
 
-## 8. Cross-Platform UI/UX Strategy (PHP Blade vs. Flutter)
+Color Palette: Hex colors for primary, secondary, canvas background, card modules, and body typography.
 
-### Design & Architecture Parity
-- **Framework Separation**: Web views utilize Laravel Blade with Bootstrap/Shadcn components, whereas the mobile application uses native Flutter widgets (`flutter_app/lib_mgmt`).
-- **Visual Parity over Code Sharing**: Rather than web wrapper solutions (WebView), UI/UX consistency across platforms is maintained by replicating design tokens (color palettes, typography hierarchy, component layouts, and user workflows) directly within Flutter's `ThemeData` and custom Dart widgets while utilizing the Laravel REST API layer (`routes/api.php`) for data exchange.
+Interface Toggles: Dark mode toggle (is_dark_mode) and compact density layout mode (is_compact_density).
+
+Layout & Typography Metrics: Dynamic button border-radius (px), font scaling multiplier (font_scale), and card elevation shadow levels (0–3).
+
+Runtime CSS Injection: The resources/views/partials/theme-styles.blade.php partial converts active database settings into CSS custom properties (:root variables like --app-bg, --app-primary, --app-radius) injected into the head of all Blade templates.
+
+Bootstrap 5 Overrides: Custom CSS variables dynamically override Bootstrap's .bg-light, .card, .btn, and .text-dark classes without compiling assets through Node.js/Vite.
+
+Interactive Customizer (/settings): Provides a live JavaScript sandbox preview where sliders, color pickers, and mode switches instantly update root CSS variables in the browser DOM before saving to the database.
+
+Cross-Platform Theme Pipeline: The structured database schema double-functions as a REST API endpoint payload (GET /api/v1/settings), allowing Flutter mobile clients to map the same user design tokens directly into native ThemeData.

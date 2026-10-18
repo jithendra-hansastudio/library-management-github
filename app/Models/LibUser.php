@@ -38,7 +38,14 @@ class LibUser extends Authenticatable
     public function donations(){
         return $this -> hasMany(Donation::class, 'user_id');
     }
-    
+        public function setting(){
+            return $this->hasOne(Setting::class, 'user_id');
+        }
+    protected static function booted(): void{
+            static::created(function ($user) {
+                $user->setting()->create(); // Creates a row using all migration default values
+            });
+}
     use HasFactory, Notifiable;
     
     protected $table = "lib_users";

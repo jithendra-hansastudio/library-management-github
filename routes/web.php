@@ -4,15 +4,27 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BooksController;
 use App\Http\Controllers\LibusersController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/clear-views', function() {
+    Artisan::call('view:clear');
+    return "<h1>View cache cleared successfully!</h1><p>You can now go back and refresh your pages.</p>";
+});
 
 // --------------------------------------------------------------------------
 // 1. Guest Routes (Public access)
 // --------------------------------------------------------------------------
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+// Logout must be accessible to authenticated users
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Redirect root domain straight to /home
 Route::get('/', function () {
@@ -20,12 +32,16 @@ Route::get('/', function () {
 });
 
 // --------------------------------------------------------------------------
-// 2. Protected Routes (Requires login)
+// 2. Protected Routes (Requires active session via Auth::login)
 // --------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
 
     // Main Dashboard / Home Screen
     Route::view('/home', 'homescreen')->name('homescreen');
+
+    // UI & App Settings
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     // Books Management
     Route::get('/books', [BooksController::class, 'index'])->name('books.index');
@@ -45,21 +61,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/{id}', [TransactionsController::class, 'show'])->name('transactions.show');
 });
-
-
-Route::inertia('/php_default_screen', 'Welcome')->name('home');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
-});
-
-require __DIR__.'/settings.php';
-
-// use App\Http\Controllers\AuthorController;
-// use App\Http\Controllers\BooksController;
-
-// Route::get('/authors', [AuthorController::class, 'index']);
-// Route::post('/putauthors', [AuthorController::class, 'store']);
-
-// Route::get('/getBooks', [AuthorController::class, 'index']);
-// Route::post('/addBooks', [AuthorController::class, 'store']);

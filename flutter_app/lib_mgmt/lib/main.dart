@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lib_mgmt_task/books.dart';
 import 'config/api_config.dart';
 
 void main() {
@@ -15,18 +16,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Library app',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
-Future<List<dynamic>> fetchBooks() async {
-  final response = await http.get(
-    Uri.parse('${ApiConfig.baseUrl}/books'),
-    headers: {'Accept': 'application/json'},
 
+Future<List<dynamic>> fetchDesign() async {
+  final response = await http.get(
+    Uri.parse('${ApiConfig.baseUrl}/settings'),
+    headers: {'Accept': 'application/json'},
   );
 
   if (response.statusCode == 200) {
@@ -40,9 +39,9 @@ Future<List<dynamic>> fetchBooks() async {
     // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
     else if (decodedData is Map<String, dynamic>) {
       if (decodedData['data'] is List) {
-
         return decodedData['data'];
-      } else if (decodedData['data'] is Map && decodedData['data']['data'] is List) {
+      } else if (decodedData['data'] is Map &&
+          decodedData['data']['data'] is List) {
         // Handles Laravel pagination objects
         return decodedData['data']['data'];
       }
@@ -53,13 +52,45 @@ Future<List<dynamic>> fetchBooks() async {
     throw Exception('Failed to load books: ${response.statusCode}');
   }
 }
+
+Future<List<dynamic>> _DesignFuture = fetchDesign();
+
+Future<List<dynamic>> fetchBooks() async {
+  final response = await http.get(
+    Uri.parse('${ApiConfig.baseUrl}/books'),
+    headers: {'Accept': 'application/json'},
+  );
+
+  if (response.statusCode == 200) {
+    // Decode response into a dynamic variable
+    final dynamic decodedData = jsonDecode(response.body);
+
+    // If Laravel returned a raw JSON List: [...]
+    if (decodedData is List) {
+      return decodedData;
+    }
+    // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
+    else if (decodedData is Map<String, dynamic>) {
+      if (decodedData['data'] is List) {
+        return decodedData['data'];
+      } else if (decodedData['data'] is Map &&
+          decodedData['data']['data'] is List) {
+        // Handles Laravel pagination objects
+        return decodedData['data']['data'];
+      }
+    }
+    return [];
+  } else {
+    throw Exception('Failed to load books: ${response.statusCode}');
+  }
+}
+
 Future<List<dynamic>> _booksFuture = fetchBooks();
 
 Future<List<dynamic>> fetchAuthors() async {
   final response = await http.get(
     Uri.parse('${ApiConfig.baseUrl}/authors'),
     headers: {'Accept': 'application/json'},
-
   );
 
   if (response.statusCode == 200) {
@@ -74,9 +105,9 @@ Future<List<dynamic>> fetchAuthors() async {
     // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
     else if (decodedData is Map<String, dynamic>) {
       if (decodedData['data'] is List) {
-
         return decodedData['data'];
-      } else if (decodedData['data'] is Map && decodedData['data']['data'] is List) {
+      } else if (decodedData['data'] is Map &&
+          decodedData['data']['data'] is List) {
         // Handles Laravel pagination objects
         return decodedData['data']['data'];
       }
@@ -87,6 +118,7 @@ Future<List<dynamic>> fetchAuthors() async {
     throw Exception('Failed to load books: ${response.statusCode}');
   }
 }
+
 Future<List<dynamic>> _authorFuture = fetchAuthors();
 
 // _booksFuture = fetchBooks();
@@ -101,120 +133,177 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   @override
   void initState() {
     super.initState();
     _booksFuture = fetchBooks();
     _authorFuture = fetchAuthors();
+    _DesignFuture = fetchDesign();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    print(_authorFuture);
+    _DesignFuture;
     return Scaffold(
-      appBar: AppBar(title: const Text('Library Books')),
-      body: FutureBuilder<List<dynamic>>(
-        future: _booksFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No books found in MariaDB.'));
-          }
-
-          final books = snapshot.data!;
-          return ListView.builder(
-            itemCount: books.length,
-            itemBuilder: (context, index) {
-              final book = books[index];
-              return ListTile(
-                leading: const Icon(Icons.book),
-                title: Hero(
-                    tag: index,
-                    child: Text(book['book_name'] ?? 'Untitled')),
-                subtitle: Text('Author name: ${book['author']['author_name'] ?? 'Unknown'}'),
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context)=> DetailScreen(item:book), ),);
-
-                },
-              );
-            },
-          );
-        },
-      ),
-    );
-
-  }
-}
-
-
-class DetailScreen extends StatefulWidget{
-  const DetailScreen({super.key, required this.item});
-  final Map item;
-
-  @override
-  State<DetailScreen> createState() => _DetailScreen();
-    }
-class _DetailScreen extends State<DetailScreen>{
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.item['book_name']}'),
-      ),
       body: Container(
-        alignment: Alignment.bottomCenter,
+        child: ListView(
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadiusGeometry.circular(10),
+                color: Colors.red.shade50
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
 
-          child: Center(child:
-          Container(
-            child: FutureBuilder(
-              future: _booksFuture, // Your async function returning Future<String>
-              builder: (context, snapshot) {
-                return Container(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    height: 40,
 
-                  color: Colors.pink.shade50,
-                  child: ListView.builder(
-                    itemCount: widget.item.length-3,
-                    itemBuilder: (context, index) {
-                      String key = widget.item.keys.elementAt(index);
-                      dynamic value = widget.item[key];
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(width: .5),
 
-                      return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        child: ListTile(
-                          subtitle: Text(key.toString()),
+                        shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
 
-                          title: Text(value.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-
-                        ),
-                      );
-                    },
-                  )
-                );
-                // if (snapshot.hasData) {
-                //   return Text('{snapshot.data?[widget.item]['']}');
-                //   // return Text(snapshot.data[0]['book_name']!); // Display the resolved string
-                // } else if (snapshot.hasError) {
-                //   return Text('Error: ${snapshot.error}');
-                // }
-                return CircularProgressIndicator(); // Show loading indicator
-              },
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (BooksScreen(title: 'Books')),
+                          ),
+                        );
+                      },
+                      child: Text('Go to Books Catalog'),
+                    ),
+                  ),
+                  Container(height: 30,)
+                ],
+              ),
             ),
-          )   ))
-          // Text(
-          //     '${dataList[widget.item]}'
-          // ))),
+            Container(height: 30,),
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  color: Colors.red.shade50
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
 
+                children: [
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    height: 40,
+
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(width: .5),
+
+                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
+
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (BooksScreen(title: 'Books')),
+                          ),
+                        );
+                      },
+                      child: Text('Go to Books Catalog'),
+                    ),
+                  ),
+                  Container(height: 30,)
+                ],
+              ),
+            ),
+            Container(height: 30,),
+
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  color: Colors.red.shade50
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+
+                children: [
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    height: 40,
+
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(width: .5),
+
+                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
+
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (BooksScreen(title: 'Books')),
+                          ),
+                        );
+                      },
+                      child: Text('Go to Books Catalog'),
+                    ),
+                  ),
+                  Container(height: 30,)
+                ],
+              ),
+            ),
+            Container(height: 30,),
+
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  color: Colors.red.shade50
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+
+                children: [
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    height: 40,
+
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(width: .5),
+
+                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
+
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (BooksScreen(title: 'Books')),
+                          ),
+                        );
+                      },
+                      child: Text('Go to Books Catalog'),
+                    ),
+                  ),
+                  Container(height: 30,)
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-
-
 }
