@@ -39,12 +39,12 @@
                     </a>
                 </li>
 
-                <!-- Settings Item (Fixed Route & Active State)
+                <!-- Settings Item (Fixed Route & Active State) -->
                 <li class="nav-item ms-lg-2">
                     <a class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.edit') }}">
                         Settings
                     </a>
-                </li> -->
+                </li>
 
                 <!-- Logout Form Button -->
                 @auth

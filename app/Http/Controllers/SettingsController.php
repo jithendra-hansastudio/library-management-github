@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingsController extends Controller
 {
-    public function edit()
-    {
-        $setting = Auth::user()->setting ?? new Setting();
-        return view('settings.edit', compact('setting'));
-    }
+   public function edit()
+{
+    // Change this line to query the Setting table directly using the user's ID
+    $setting = Setting::where('user_id', Auth::id())->first() ?? new Setting();
+    
+    return view('settings.edit', compact('setting'));
+}
 
     public function api_index()
     {

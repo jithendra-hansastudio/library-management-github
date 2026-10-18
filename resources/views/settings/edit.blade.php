@@ -38,7 +38,7 @@
                     @csrf
 
                     <!-- Theme Mode & Density -->
-                    <div class="card shadow-sm border-0 mb-4">
+                    <!-- <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-transparent fw-bold border-bottom py-3">
                             ⚙️ Interface Toggles
                         </div>
@@ -63,7 +63,7 @@
                                 <div class="form-text mt-0">Reduce padding to display more data on screen.</div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Curated Theme Presets (6 Options) -->
                     <div class="card shadow-sm border-0 mb-4">
@@ -194,77 +194,57 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
-        // Preset definitions with baked-in Light & Dark M3 color harmonies
-        const presetPalettes = {
-            ocean: {
-                light: { primary: '#0d6efd', secondary: '#6c757d', bg: '#f4f6f9', card: '#ffffff', text: '#212529', border: '#dee2e6' },
-                dark:  { primary: '#3b82f6', secondary: '#9ca3af', bg: '#141218', card: '#1d1b20', text: '#e6e1e5', border: '#49454f' }
-            },
-            emerald: {
-                light: { primary: '#059669', secondary: '#64748b', bg: '#f0fdf4', card: '#ffffff', text: '#064e3b', border: '#bbf7d0' },
-                dark:  { primary: '#10b981', secondary: '#94a3b8', bg: '#061a14', card: '#0f2922', text: '#ecfdf5', border: '#134e4a' }
-            },
-            sunset: {
-                light: { primary: '#7c3aed', secondary: '#db2777', bg: '#faf5ff', card: '#ffffff', text: '#4c1d95', border: '#e9d5ff' },
-                dark:  { primary: '#8b5cf6', secondary: '#f472b6', bg: '#120f18', card: '#1c1724', text: '#f3e8ff', border: '#4c3f61' }
-            },
-            slate: {
-                light: { primary: '#334155', secondary: '#64748b', bg: '#f8fafc', card: '#ffffff', text: '#0f172a', border: '#e2e8f0' },
-                dark:  { primary: '#64748b', secondary: '#94a3b8', bg: '#0b0f19', card: '#111827', text: '#f8fafc', border: '#334155' }
-            },
-            amber: {
-                light: { primary: '#d97706', secondary: '#78350f', bg: '#fffbeb', card: '#ffffff', text: '#451a03', border: '#fde68a' },
-                dark:  { primary: '#f59e0b', secondary: '#d97706', bg: '#18140c', card: '#252014', text: '#fef3c7', border: '#57451c' }
-            },
-            cyber: {
-                light: { primary: '#06b6d4', secondary: '#f43f5e', bg: '#ecfeff', card: '#ffffff', text: '#0e7490', border: '#a5f3fc' },
-                dark:  { primary: '#22d3ee', secondary: '#fb7185', bg: '#081014', card: '#101c24', text: '#cffafe', border: '#164e63' }
-            }
+    // Preset definitions
+    const presetPalettes = {
+        ocean: { primary: '#0d6efd', secondary: '#6c757d', bg: '#f4f6f9', card: '#ffffff', text: '#212529', border: '#dee2e6' },
+        emerald: { primary: '#059669', secondary: '#64748b', bg: '#f0fdf4', card: '#ffffff', text: '#064e3b', border: '#bbf7d0' },
+        sunset: { primary: '#7c3aed', secondary: '#db2777', bg: '#faf5ff', card: '#ffffff', text: '#4c1d95', border: '#e9d5ff' },
+        slate: { primary: '#334155', secondary: '#64748b', bg: '#f8fafc', card: '#ffffff', text: '#0f172a', border: '#e2e8f0' },
+        amber: { primary: '#d97706', secondary: '#78350f', bg: '#fffbeb', card: '#ffffff', text: '#451a03', border: '#fde68a' },
+        cyber: { primary: '#06b6d4', secondary: '#f43f5e', bg: '#ecfeff', card: '#ffffff', text: '#0e7490', border: '#a5f3fc' }
+    };
+
+    const cornerRadii = {
+        sharp: '0px',
+        smooth: '10px',
+        pill: '30px'
+    };
+
+    function previewTheme() {
+        const presetKey = document.querySelector('input[name="theme_preset"]:checked')?.value || 'ocean';
+        const cornerKey = document.querySelector('input[name="corner_style"]:checked')?.value || 'smooth';
+        const scale = document.getElementById('font_scale').value;
+        const shadowLevel = document.getElementById('shadow_level').value;
+
+        // Update slider label
+        document.getElementById('font_scale_val').innerText = scale + 'x';
+
+        // Get colors for preset (Light mode only now)
+        const palette = presetPalettes[presetKey];
+        const radius = cornerRadii[cornerKey];
+
+        // Shadows mapping
+        const shadows = {
+            0: 'none',
+            1: '0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3)',
+            2: '0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.3)',
+            3: '0 8px 16px 4px rgba(0, 0, 0, 0.15), 0 3px 6px 0 rgba(0, 0, 0, 0.3)'
         };
 
-        const cornerRadii = {
-            sharp: '0px',
-            smooth: '10px',
-            pill: '30px'
-        };
+        // Apply to CSS variables on root
+        const root = document.documentElement;
+        root.style.setProperty('--app-primary', palette.primary);
+        root.style.setProperty('--app-secondary', palette.secondary);
+        root.style.setProperty('--app-bg', palette.bg);
+        root.style.setProperty('--app-card-bg', palette.card);
+        root.style.setProperty('--app-text', palette.text);
+        root.style.setProperty('--app-border', palette.border);
+        root.style.setProperty('--app-radius', radius);
+        root.style.setProperty('--app-font-scale', scale);
+        root.style.setProperty('--app-shadow', shadows[shadowLevel]);
+    }
 
-        function previewTheme() {
-            const isDark = document.getElementById('is_dark_mode').checked;
-            const presetKey = document.querySelector('input[name="theme_preset"]:checked')?.value || 'ocean';
-            const cornerKey = document.querySelector('input[name="corner_style"]:checked')?.value || 'smooth';
-            const scale = document.getElementById('font_scale').value;
-            const shadowLevel = document.getElementById('shadow_level').value;
-
-            // Update slider label
-            document.getElementById('font_scale_val').innerText = scale + 'x';
-
-            // Get colors for preset and mode
-            const mode = isDark ? 'dark' : 'light';
-            const palette = presetPalettes[presetKey][mode];
-            const radius = cornerRadii[cornerKey];
-
-            // Shadows mapping
-            const shadows = {
-                0: 'none',
-                1: '0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3)',
-                2: '0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.3)',
-                3: '0 8px 16px 4px rgba(0, 0, 0, 0.15), 0 3px 6px 0 rgba(0, 0, 0, 0.3)'
-            };
-
-            // Apply to CSS variables on root
-            const root = document.documentElement;
-            root.style.setProperty('--app-primary', palette.primary);
-            root.style.setProperty('--app-secondary', palette.secondary);
-            root.style.setProperty('--app-bg', palette.bg);
-            root.style.setProperty('--app-card-bg', palette.card);
-            root.style.setProperty('--app-text', palette.text);
-            root.style.setProperty('--app-border', palette.border);
-            root.style.setProperty('--app-radius', radius);
-            root.style.setProperty('--app-font-scale', scale);
-            root.style.setProperty('--app-shadow', shadows[shadowLevel]);
-        }
-
-        document.addEventListener('DOMContentLoaded', previewTheme);
-    </script>
+    document.addEventListener('DOMContentLoaded', previewTheme);
+</script>
 </body>
 </html>
