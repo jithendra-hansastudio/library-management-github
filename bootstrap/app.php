@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'putauthors',
         ]);
 
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
+
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [

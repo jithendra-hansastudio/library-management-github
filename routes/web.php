@@ -7,7 +7,6 @@ use App\Http\Controllers\LibusersController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
-
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/clear-views', function() {
@@ -32,32 +31,36 @@ Route::get('/', function () {
 });
 
 // --------------------------------------------------------------------------
-// 2. Protected Routes (Requires active session via Auth::login)
+// 2. Protected Routes with Role-Based Access Control (RBAC)
 // --------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
 
-    // Main Dashboard / Home Screen
+    // Dashboard / Home Screen (Accessible to all authenticated users)
     Route::view('/home', 'homescreen')->name('homescreen');
 
-    // UI & App Settings
-    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
-    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    // Books & Authors (Accessible to Admins and Librarians)
+    Route::middleware(['role:admin,librarian'])->group(function () {
+        Route::get('/books', [BooksController::class, 'index'])->name('books.index');
+        Route::get('/books/{id}', [BooksController::class, 'show'])->name('books.show');
 
-    // Books Management
-    Route::get('/books', [BooksController::class, 'index'])->name('books.index');
-    Route::get('/books/{id}', [BooksController::class, 'show'])->name('books.show');
+        Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
+        Route::get('/authors/{id}', [AuthorController::class, 'show'])->name('authors.show');
+    });
 
-    // Authors Management
-    Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
-    Route::get('/authors/{id}', [AuthorController::class, 'show'])->name('authors.show');
+    // Transactions History (Accessible to Admins, Librarians, and Members)
+    Route::middleware(['role:admin,librarian,member'])->group(function () {
+        Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{id}', [TransactionsController::class, 'show'])->name('transactions.show');
+    });
 
-    // Library Users Management
-    Route::get('/users', [LibusersController::class, 'index'])->name('lib_users.index');
-    Route::get('/users/create', [LibusersController::class, 'create'])->name('lib_users.create');
-    Route::post('/users', [LibusersController::class, 'store'])->name('lib_users.store');
-    Route::get('/users/{id}', [LibusersController::class, 'show'])->name('lib_users.show');
+    // Library Users Management & Settings (Strictly Admin Only)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/users', [LibusersController::class, 'index'])->name('lib_users.index');
+        Route::get('/users/create', [LibusersController::class, 'create'])->name('lib_users.create');
+        Route::post('/users', [LibusersController::class, 'store'])->name('lib_users.store');
+        Route::get('/users/{id}', [LibusersController::class, 'show'])->name('lib_users.show');
 
-    // Transactions History
-    Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
-    Route::get('/transactions/{id}', [TransactionsController::class, 'show'])->name('transactions.show');
+        Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
 });
