@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // 1. Import Authenticatable instead of standard Model
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 /**
  * Class LibUser
  *
@@ -21,6 +22,10 @@ use Illuminate\Notifications\Notifiable;
  */
 class LibUser extends Authenticatable
 {
+    use HasFactory, Notifiable, HasApiTokens;
+    
+    protected $table = "lib_users";
+    
     /**
      * Get all transactions made by this library user.
      *
@@ -38,19 +43,21 @@ class LibUser extends Authenticatable
     public function donations(){
         return $this -> hasMany(Donation::class, 'user_id');
     }
-        public function setting(){
+    
+    
+    public function setting(){
             return $this->hasOne(Setting::class, 'user_id');
         }
+    
+    
     protected static function booted(): void{
             static::created(function ($user) {
                 $user->setting()->create(); // Creates a row using all migration default values
             });
 }
-    use HasFactory, Notifiable;
-    
-    protected $table = "lib_users";
         
     public $timestamps = true;
+ 
     protected $fillable = [
         "user_name",
         "date_of_birth",
@@ -59,10 +66,16 @@ class LibUser extends Authenticatable
         "role",
         "password"
             ];
-            protected $hidden = [
+        
+    protected $hidden = [
         'password',
         'remember_token',
     ];
-
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
             
 }

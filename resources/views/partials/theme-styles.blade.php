@@ -37,7 +37,7 @@
     $rgb = "$r, $g, $b";
 @endphp
 
-@charset "UTF-8";
+<!-- @charset "UTF-8"; -->
 
 <!-- 1. FIRST: Load the raw Bootstrap 5.3 CSS -->
 <style>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('gender',["male","female","prefer_not_to_say"]);
             $table->string('address',40);
             $table->enum('role',["librarian","admin","member","visitor"]);
-            $table->string('password',13);
+            $table->string('password',255);
             $table->timestamps();
             $table->softDeletes();
         });
