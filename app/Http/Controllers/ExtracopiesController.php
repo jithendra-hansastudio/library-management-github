@@ -41,4 +41,19 @@ class ExtracopiesController extends Controller
         return response()->json($extracopies);
 
     }
+
+    /**
+ * Display details of a specific extra copy record by ID.
+ *
+ * @param int|string $id
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function api_show($id)
+{
+    $extraCopy = ExtraCopy::findOrFail($id);
+    return response()->json([
+        'data' => $extraCopy
+    ]);
+}
+
 }

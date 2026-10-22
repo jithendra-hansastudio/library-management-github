@@ -79,4 +79,23 @@ class LibusersController extends Controller
     ], 201);
 
     }
+
+    /**
+ * Display a single library user profile with nested transactions and donations via API.
+ *
+ * @param int|string $id
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function api_show($id)
+{
+    $user = LibUser::with([
+        'transactions.book',
+        'donations'
+    ])->findOrFail($id);
+
+    return response()->json([
+        'data' => $user
+    ]);
+}
+
 }

@@ -67,6 +67,21 @@ class BooksController extends Controller
         $book = Book::with('author' ,'extraCopy','transactions')->findOrFail($id);
         return view('books.show', compact('book')); 
     }
+
+/**
+ * Return JSON response for a specific book by ID.
+ *
+ * @param int|string $id
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function api_show($id)
+{        
+    $book = Book::with('author', 'extraCopy', 'transactions')->findOrFail($id);
+    return response()->json([
+        'data' => $book
+    ]);
+}
+
 }
     
 

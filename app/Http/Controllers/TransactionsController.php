@@ -13,39 +13,37 @@ class TransactionsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function api_index(){
+   public function api_index(){
+        $daily_fine_amt = 10;
+        $today = Carbon::now()->startOfDay();
 
-    //FULL GEMINI
-    $daily_fine_amt = 10;
-    $today = Carbon::now()->startOfDay();
+        // Fix: Use 'Transaction' (PascalCase) and eager load 'user' and 'book'
+        $allTransactions = Transaction::with(['user', 'book'])->get();
 
-    // Fetch all transactions from the database
-    $allTransactions = transactions::all();
+        // Map through each transaction to dynamically calculate fines on-the-fly
+        $calculatedTransactions = $allTransactions->map(function ($tx) use ($daily_fine_amt, $today) {
+            
+            $dueDate = Carbon::parse($tx->date_of_return)->startOfDay();
 
-    // Map through each transaction to dynamically calculate fines on-the-fly
-    $calculatedTransactions = $allTransactions->map(function ($tx) use ($daily_fine_amt, $today) {
-        
-        $dueDate = Carbon::parse($tx->date_of_return)->startOfDay();
+            if ($today->greaterThan($dueDate)) {
+                $numOfDueDays = $dueDate->diffInDays($today); 
+            } else {
+                $numOfDueDays = 0; 
+            }
 
-        if ($today->greaterThan($dueDate)) {
-            $numOfDueDays = $dueDate->diffInDays($today); 
-        } else {
-            $numOfDueDays = 0; 
-        }
+            $total_fine = $numOfDueDays * $daily_fine_amt;
 
-        $total_fine = $numOfDueDays * $daily_fine_amt;
+            // Attach calculated values
+            $tx->num_of_due_days = $numOfDueDays;
+            $tx->fine_amount = $total_fine;
 
-        // Attach calculated values to the object/array output without touching the database
-        $tx->num_of_due_days = $numOfDueDays;
-        $tx->fine_amount = $total_fine;
+            return $tx;
+        });
 
-        return $tx;
-    });
-
-    return response()->json([
-        'message' => 'Transactions fetched and fines calculated successfully!',
-        'data' => $calculatedTransactions
-    ], 200);
+        return response()->json([
+            'message' => 'Transactions fetched and fines calculated successfully!',
+            'data' => $calculatedTransactions
+        ], 200);
     }
 
     /**
@@ -156,4 +154,33 @@ class TransactionsController extends Controller
     ], 201);
 
    }
+
+/**
+ * Display details of a specific transaction by ID via API with fine calculations.
+ *
+ * @param int|string $id
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function api_show($id)
+{
+    $transaction = Transaction::with(['user', 'book'])->findOrFail($id);
+
+    $daily_fine_amt = 10;
+    $today = Carbon::now()->startOfDay();
+    $dueDate = Carbon::parse($transaction->date_of_return)->startOfDay();
+
+    if ($today->greaterThan($dueDate)) {
+        $numOfDueDays = $dueDate->diffInDays($today); 
+    } else {
+        $numOfDueDays = 0; 
+    }
+
+    $transaction->num_of_due_days = $numOfDueDays;
+    $transaction->fine_amount = $numOfDueDays * $daily_fine_amt;
+
+    return response()->json([
+        'data' => $transaction
+    ]);
+}
+
 }

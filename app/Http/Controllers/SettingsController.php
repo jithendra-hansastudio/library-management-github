@@ -15,10 +15,34 @@ class SettingsController extends Controller
     return view('settings.edit', compact('setting'));
 }
 
+
     public function api_index()
     {
         return response()->json(Setting::get());
     }
+
+    public function api_show($id)
+    {
+        return response()->json(Setting::where('user_id', $id)->get());
+    }
+
+    public function show(Request $request)
+{
+    // Get settings for the currently authenticated user
+    $settings = Setting::where('user_id', $request->user()->id)->first();
+
+    // If they don't have settings yet, you can return a default array or create one
+    if (!$settings) {
+        return response()->json([
+            'theme_preset' => 'ocean',
+            'corner_style' => 'smooth',
+            'font_scale' => 1,
+            'is_dark_mode' => false,
+        ]);
+    }
+
+    return response()->json($settings);
+}
 
     public function update(Request $request)
     {

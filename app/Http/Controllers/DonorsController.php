@@ -44,4 +44,18 @@ class DonorsController extends Controller
 
         // return redirect()->back()->with('success', 'Book added successfully!');
     }
+
+    /**
+ * Display details of a specific donation by ID.
+ *
+ * @param int|string $id
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function api_show($id)
+{
+    $donation = Donation::findOrFail($id);
+    return response()->json([
+        'data' => $donation
+    ]);
+}
 }

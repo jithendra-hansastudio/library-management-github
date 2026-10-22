@@ -61,4 +61,19 @@ class AuthorController extends Controller
         // 3. Return the created product with a 201 Created status code
         return response()->json($author, 201);
     }
+
+    /**
+     * Display a single author and all their associated books via API.
+     *
+     * @param int|string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function api_show($id)
+    {
+        $author = Author::with('books')->findOrFail($id);
+        return response()->json([
+            'data' => $author
+        ]);
+    }
+
 }
