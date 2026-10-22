@@ -9,6 +9,8 @@ use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
+
+
 Route::get('/clear-views', function() {
     Artisan::call('view:clear');
     return "<h1>View cache cleared successfully!</h1><p>You can now go back and refresh your pages.</p>";
@@ -34,6 +36,9 @@ Route::get('/', function () {
 // 2. Protected Routes with Role-Based Access Control (RBAC)
 // --------------------------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/settings_show', [SettingsController::class, 'api_index']);
+    Route::get('/settings_show/{id}', [SettingsController::class, 'api_show']);
 
     // Dashboard / Home Screen (Accessible to all authenticated users)
     Route::view('/home', 'homescreen')->name('homescreen');

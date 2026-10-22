@@ -1,81 +1,99 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lib_mgmt_task/books.dart';
+import 'package:lib_mgmt_task/screens/books.dart';
+import 'package:lib_mgmt_task/screens/home.dart';
+import 'package:lib_mgmt_task/services/api_client.dart';
 import 'config/api_config.dart';
+import 'services/auth_services.dart';
+import 'screens/login_screen.dart'; // Make sure this points to your LoginScreen widget
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LibraryApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LibraryApp extends StatelessWidget {
+  const LibraryApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Library app',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Library App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/home': (context) => const MyHomePage(title: 'Library Dashboard'),
+
+      },
     );
   }
 }
 
-Future<List<dynamic>> fetchDesign() async {
-  final response = await http.get(
-    Uri.parse('${ApiConfig.baseUrl}/settings'),
-    headers: {'Accept': 'application/json'},
-  );
+final ApiClient _apiClient = ApiClient(); // Make sure to import your ApiClient
+
+// Data fetching helper functions using ApiConfig
+// Future<List<dynamic>> fetchDesign() async {
+//   final response = await _apiClient.get('/settings');
+//
+//   if (response.statusCode == 200) {
+//
+//     final dynamic decodedData = jsonDecode(response.body);
+//     print(decodedData);
+//     if (decodedData is List) {
+//       return decodedData;
+//     } else if (decodedData is Map<String, dynamic>) {
+//       if (decodedData['data'] is List) {
+//         return decodedData['data'];
+//       } else if (decodedData['data'] is Map &&
+//           decodedData['data']['data'] is List) {
+//         return decodedData['data']['data'];
+//       }
+//     }
+//     return [];
+//   } else {
+//     throw Exception('Failed to load design settings: ${response.statusCode}');
+//   }
+// }
+
+Future<Map<String, dynamic>> fetchDesign() async {
+  final response = await _apiClient.get('/settings');
 
   if (response.statusCode == 200) {
-    // Decode response into a dynamic variable
     final dynamic decodedData = jsonDecode(response.body);
 
-    // If Laravel returned a raw JSON List: [...]
-    if (decodedData is List) {
+    // Handle standard API resource wrappers if any (e.g. { "data": {...} })
+    if (decodedData is Map<String, dynamic>) {
+      if (decodedData.containsKey('data') && decodedData['data'] is Map<String, dynamic>) {
+        return decodedData['data'];
+      }
       return decodedData;
     }
-    // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
-    else if (decodedData is Map<String, dynamic>) {
-      if (decodedData['data'] is List) {
-        return decodedData['data'];
-      } else if (decodedData['data'] is Map &&
-          decodedData['data']['data'] is List) {
-        // Handles Laravel pagination objects
-        return decodedData['data']['data'];
-      }
-    }
-
-    return [];
-  } else {
-    throw Exception('Failed to load books: ${response.statusCode}');
   }
-}
 
-Future<List<dynamic>> _DesignFuture = fetchDesign();
+  // Safe default fallback if it fails or returns empty
+  return {
+    'theme_preset': 'ocean',
+    'corner_style': 'smooth',
+    'font_scale': 1,
+    'is_dark_mode': false,
+  };
+}
 
 Future<List<dynamic>> fetchBooks() async {
-  final response = await http.get(
-    Uri.parse('${ApiConfig.baseUrl}/books'),
-    headers: {'Accept': 'application/json'},
-  );
+  final response = await _apiClient.get('/books');
 
   if (response.statusCode == 200) {
-    // Decode response into a dynamic variable
     final dynamic decodedData = jsonDecode(response.body);
-
-    // If Laravel returned a raw JSON List: [...]
     if (decodedData is List) {
       return decodedData;
-    }
-    // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
-    else if (decodedData is Map<String, dynamic>) {
+    } else if (decodedData is Map<String, dynamic>) {
       if (decodedData['data'] is List) {
         return decodedData['data'];
       } else if (decodedData['data'] is Map &&
           decodedData['data']['data'] is List) {
-        // Handles Laravel pagination objects
         return decodedData['data']['data'];
       }
     }
@@ -84,8 +102,6 @@ Future<List<dynamic>> fetchBooks() async {
     throw Exception('Failed to load books: ${response.statusCode}');
   }
 }
-
-Future<List<dynamic>> _booksFuture = fetchBooks();
 
 Future<List<dynamic>> fetchAuthors() async {
   final response = await http.get(
@@ -94,216 +110,20 @@ Future<List<dynamic>> fetchAuthors() async {
   );
 
   if (response.statusCode == 200) {
-    // Decode response into a dynamic variable
     final dynamic decodedData = jsonDecode(response.body);
-    print(decodedData);
-
-    // If Laravel returned a raw JSON List: [...]
     if (decodedData is List) {
       return decodedData;
-    }
-    // If Laravel returned a wrapped object: {"status": "success", "data": [...]}
-    else if (decodedData is Map<String, dynamic>) {
+    } else if (decodedData is Map<String, dynamic>) {
       if (decodedData['data'] is List) {
         return decodedData['data'];
       } else if (decodedData['data'] is Map &&
           decodedData['data']['data'] is List) {
-        // Handles Laravel pagination objects
         return decodedData['data']['data'];
       }
     }
-
     return [];
   } else {
-    throw Exception('Failed to load books: ${response.statusCode}');
+    throw Exception('Failed to load authors: ${response.statusCode}');
   }
 }
 
-Future<List<dynamic>> _authorFuture = fetchAuthors();
-
-// _booksFuture = fetchBooks();
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    _booksFuture = fetchBooks();
-    _authorFuture = fetchAuthors();
-    _DesignFuture = fetchDesign();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _DesignFuture;
-    return Scaffold(
-      body: Container(
-        child: ListView(
-          children: [
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusGeometry.circular(10),
-                color: Colors.red.shade50
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 40,
-
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(width: .5),
-
-                        shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
-
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => (BooksScreen(title: 'Books')),
-                          ),
-                        );
-                      },
-                      child: Text('Go to Books Catalog'),
-                    ),
-                  ),
-                  Container(height: 30,)
-                ],
-              ),
-            ),
-            Container(height: 30,),
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadiusGeometry.circular(10),
-                  color: Colors.red.shade50
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 40,
-
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          side: BorderSide(width: .5),
-
-                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
-
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => (BooksScreen(title: 'Books')),
-                          ),
-                        );
-                      },
-                      child: Text('Go to Books Catalog'),
-                    ),
-                  ),
-                  Container(height: 30,)
-                ],
-              ),
-            ),
-            Container(height: 30,),
-
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadiusGeometry.circular(10),
-                  color: Colors.red.shade50
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 40,
-
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          side: BorderSide(width: .5),
-
-                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
-
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => (BooksScreen(title: 'Books')),
-                          ),
-                        );
-                      },
-                      child: Text('Go to Books Catalog'),
-                    ),
-                  ),
-                  Container(height: 30,)
-                ],
-              ),
-            ),
-            Container(height: 30,),
-
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadiusGeometry.circular(10),
-                  color: Colors.red.shade50
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    height: 40,
-
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          side: BorderSide(width: .5),
-
-                          shape:  RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(15))
-
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => (BooksScreen(title: 'Books')),
-                          ),
-                        );
-                      },
-                      child: Text('Go to Books Catalog'),
-                    ),
-                  ),
-                  Container(height: 30,)
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
