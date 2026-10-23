@@ -9,32 +9,38 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _authService = AuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isLoading = false;
   String? _errorMessage;
-
   void _handleLogin() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    bool success = await _authService.login(
-      _usernameController.text.trim(),
-      _passwordController.text.trim(),
-    );
+    try {
+      bool success = await _authService.login(
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
+      ).timeout(const Duration(seconds: 15));
 
-    setState(() {
-      _isLoading = false;
-    });
+      if (!mounted) return;
 
-    if (success) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
+      if (success) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid username or password.';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = 'Invalid username or password.';
+        _errorMessage = 'Connection failed. Please check your network.';
+        _isLoading = false;
       });
     }
   }
@@ -42,19 +48,21 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[150], // Matches bg-light
+      backgroundColor: const Color(0xFFF8F9FA), // Matches Bootstrap bg-light
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400), // Matches container max-width: 400px
             child: Card(
-              elevation: 2, // Matches shadow-sm
+              color: Colors.white,
+              elevation: 1, // Matches Bootstrap shadow-sm
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color: Colors.grey.shade300, width: 1),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(24.0), // Matches p-4
+                padding: const EdgeInsets.all(24.0), // Matches Bootstrap p-4 (24px)
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,8 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       'Library Login',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 24, // Matches Bootstrap h3 / card-title styling
                         fontWeight: FontWeight.bold,
+                        color: Color(0xFF212529),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -86,27 +95,78 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
+                    // Username Field
+                    const Text(
+                      'Username',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF212529),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: _usernameController,
                       autofocus: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: const BorderSide(color: Color(0xFF0D6EFD), width: 1.5),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
+                    // Password Field
+                    const Text(
+                      'Password',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF212529),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: const BorderSide(color: Color(0xFF0D6EFD), width: 1.5),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),
+                    // Sign In Button
                     SizedBox(
-                      height: 48,
+                      height: 42,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0D6EFD), // Bootstrap primary blue
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
                         onPressed: _isLoading ? null : _handleLogin,
                         child: _isLoading
                             ? const SizedBox(
@@ -117,7 +177,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.white,
                           ),
                         )
-                            : const Text('Sign In'),
+                            : const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
                   ],
