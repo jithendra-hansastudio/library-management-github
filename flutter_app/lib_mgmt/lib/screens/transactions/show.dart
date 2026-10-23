@@ -289,6 +289,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
     );
   }
 
+
   Widget _buildDetailRow(String label, String value, Color? linkColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

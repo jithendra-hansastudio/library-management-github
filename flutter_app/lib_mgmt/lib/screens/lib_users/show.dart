@@ -73,7 +73,13 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
     return Theme(
       data: customTheme,
       child: Scaffold(
-        appBar: AppBar(title: Text('$userName - User Profile')),
+        appBar: AppBar(
+          title: Text(
+            '$userName - User Profile',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage != null
@@ -81,7 +87,7 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
             child: Text(_errorMessage!,
                 style: const TextStyle(color: Colors.red)))
             : SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
@@ -106,7 +112,7 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                   // Profile Header Card
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -119,7 +125,7 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                 child: Text(
                                   userName,
                                   style: TextStyle(
-                                    fontSize: 26,
+                                    fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                     color: primaryColor,
                                   ),
@@ -130,7 +136,7 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 6),
+                                    horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade600,
                                   borderRadius: BorderRadius.circular(50),
@@ -139,14 +145,14 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                   formattedRole,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 20),
                           LayoutBuilder(
                             builder: (context, constraints) {
                               bool isWide = constraints.maxWidth >= 768;
@@ -171,30 +177,50 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Gender',
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600)),
-                                        Text(gender,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w600)),
-                                      ],
-                                    ),
                                     const SizedBox(height: 12),
                                     Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Date of Birth',
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600)),
-                                        Text(dob,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w600)),
+                                        Expanded(
+                                          child: Text('Gender',
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .grey.shade600)),
+                                        ),
+                                        Expanded(
+                                          child: Text(gender,
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow:
+                                              TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text('Date of Birth',
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .grey.shade600)),
+                                        ),
+                                        Expanded(
+                                          child: Text(dob,
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow:
+                                              TextOverflow.ellipsis),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -222,14 +248,17 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 12),
                                     Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Address',
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600)),
+                                        Expanded(
+                                          child: Text('Address',
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .grey.shade600)),
+                                        ),
                                         Expanded(
                                           child: Text(
                                             address,
@@ -242,17 +271,27 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 12),
+                                    const SizedBox(height: 8),
                                     Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Member Since',
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600)),
-                                        Text(createdAt,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w600)),
+                                        Expanded(
+                                          child: Text('Member Since',
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .grey.shade600)),
+                                        ),
+                                        Expanded(
+                                          child: Text(createdAt,
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow:
+                                              TextOverflow.ellipsis),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -273,7 +312,7 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                 return Column(
                                   children: [
                                     personalInfoBox,
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 12),
                                     accountInfoBox,
                                   ],
                                 );
@@ -284,16 +323,16 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
 
                   // Borrowing History Header
                   const Text(
                     'Borrowing History',
                     style: TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     child: Divider(thickness: 1),
                   ),
 
@@ -409,66 +448,23 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
                                 ],
                               ),
                               const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Issue Date',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors
-                                              .grey.shade600)),
-                                  Text(issueDate,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                          FontWeight.w500)),
-                                ],
-                              ),
+                              _buildDetailRow('Issue Date', issueDate),
+                              const SizedBox(height: 6),
+                              _buildDetailRow('Due Date', dueDate),
+                              const SizedBox(height: 6),
+                              _buildDetailRow('Returned On', returnedOn),
                               const SizedBox(height: 6),
                               Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Due Date',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors
-                                              .grey.shade600)),
-                                  Text(dueDate,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                          FontWeight.w500)),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Returned On',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors
-                                              .grey.shade600)),
-                                  Text(returnedOn,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                          FontWeight.w500)),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Fine Paid',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors
-                                              .grey.shade600)),
+                                  Expanded(
+                                    child: Text('Fine Paid',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors
+                                                .grey.shade600)),
+                                  ),
                                   finePaid > 0
                                       ? Container(
                                     padding:
@@ -517,6 +513,27 @@ class _LibUserDetailScreenState extends State<LibUserDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(label,
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.right,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
